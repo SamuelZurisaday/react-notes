@@ -10,7 +10,8 @@ import AddIcon from "@material-ui/icons/Add";
 import NotesForm from "./NotesForm";
 import NotesList from "./NotesList";
 //Router
-import {Link} from "react-router-dom";
+import {Link, Route} from "react-router-dom";
+import Home from "./Home";
 
 class App extends Component {
   constructor(props) {
@@ -53,10 +54,21 @@ class App extends Component {
             <NotesList notes={this.state.notes}/>
           </Grid>
           <Grid item xs={8}>
-            <NotesForm updateField={this.updateField} saveNote={this.saveNote} title={this.state.title} description={this.state.description}/>
+            <Route exact path="/" component={Home}/>
+            <Route 
+            path="/add"
+            render={() => (
+              <NotesForm
+              title={this.state.title}
+              description={this.state.description}
+              updateField={this.updateField}
+              saveNote={this.saveNote}
+              />
+            )}
+            />
           </Grid>
         </Grid>
-        <Fab color="primary" className="addIcon" component={Link} to="/addSS">
+        <Fab color="primary" className="addIcon" component={Link} to="/add">
           <AddIcon/>
         </Fab>
       </Fragment>
