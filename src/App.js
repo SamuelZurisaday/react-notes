@@ -10,7 +10,7 @@ import AddIcon from "@material-ui/icons/Add";
 import NotesForm from "./NotesForm";
 import NotesList from "./NotesList";
 //Router
-import { Link, Route } from "react-router-dom";
+import { Link, Route, Redirect } from "react-router-dom";
 import Home from "./Home";
 import Note from "./Note";
 
@@ -43,7 +43,13 @@ class App extends Component {
         description: ""
       });
     }
-  }
+  };
+  deleteNote = noteId => {
+    this.setState(state => {
+      return { notes: state.notes.filter(note => note.id !== noteId) };
+    });
+  };
+
   render() {
     return (
       <Fragment>
@@ -52,7 +58,7 @@ class App extends Component {
         </Typography>
         <Grid container justify="center" spacing={2}>
           <Grid item xs={4}>
-            <NotesList notes={this.state.notes} />
+            <NotesList notes={this.state.notes} deleteNote={this.deleteNote} />
           </Grid>
           <Grid item xs={8}>
             <Route exact path="/" component={Home} />
@@ -67,7 +73,15 @@ class App extends Component {
                 />
               )}
             />
-            <Route path="/view/:id" render={props => <Note {...props} notes={this.state.notes} />} />
+            <Route
+              path="/view/:id"
+              render={props => {
+                const note = this.state.notes.filter(
+                  note => note.id === parseInt(props.match.params.id)
+                  )[0];
+                return note ? <Note note={note} /> : <Redirect to="/" />;
+              }}
+            />
           </Grid>
         </Grid>
         <Fab color="primary" className="addIcon" component={Link} to="/add">
